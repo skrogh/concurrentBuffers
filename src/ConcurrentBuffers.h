@@ -102,7 +102,7 @@ public:
 };
 
 
-template<typename Data,int Length>
+template<typename Data>
 class ConcurrentFifo
 {
 private:
@@ -110,12 +110,12 @@ private:
 	mutable boost::mutex the_mutex;
 	boost::condition_variable the_condition_variable;
 public:
-	ConcurrentFifo(): the_queue(Length)
+	ConcurrentFifo(int length): the_queue(length)
 	{
 		
 	}
 	
-	ConcurrentFifo<Data,Length>& operator=(const ConcurrentFifo<Data,Length>& other)
+	ConcurrentFifo<Data>& operator=(const ConcurrentFifo<Data>& other)
 	{
 		boost::mutex::scoped_lock lock_other(other.the_mutex);
 		boost::mutex::scoped_lock lock(the_mutex);
@@ -125,7 +125,7 @@ public:
 		the_condition_variable.notify_one();
 	}
 	
-	ConcurrentFifo(const ConcurrentFifo<Data,Length>& other)
+	ConcurrentFifo(const ConcurrentFifo<Data>& other)
 	{
 		boost::mutex::scoped_lock lock_other(other.the_mutex);
 		boost::mutex::scoped_lock lock(the_mutex);
